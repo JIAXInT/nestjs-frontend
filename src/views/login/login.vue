@@ -1,32 +1,73 @@
+<script lang="ts" setup>
+import axios from "@/utils/axios";
+import { computed, reactive } from "vue";
+
+const loginInfo = reactive({
+  username: "",
+  usernameMsg: computed(() => {
+    if (
+      loginInfo.username !== "" &&
+      !/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}/gim.test(
+        loginInfo.username
+      )
+    ) {
+      return "请输入正确的邮箱地址";
+    }
+    return "";
+  }),
+  password: "",
+  passwordMsg: computed(() => {
+    if (loginInfo.password.length < 6 && loginInfo.password.length > 0) {
+      return "密码长度必须大于等于6位";
+    }
+    return "";
+  }),
+});
+
+const submit = async () => {
+  axios.post("/auth/login", loginInfo).then((res) => {
+    console.log(res);
+  });
+};
+</script>
+
 <template>
   <div
     class="container d-flex justify-content-center align-items-center vh-100"
   >
-    <div class="col-4">
+    <div class="col-11 col-sm-8 col-lg-6 col-xl-4">
       <form class="shadow-sm rounded p-4 border">
         <div class="mb-3">
           <label for="exampleInputEmail1" class="form-label">用户名</label>
           <input
             type="email"
-            class="form-control"
+            :class="['form-control', { 'is-invalid': loginInfo.usernameMsg }]"
             id="exampleInputEmail1"
             aria-describedby="emailHelp"
+            v-model="loginInfo.username"
           />
+          <div class="invalid-feedback">{{ loginInfo.usernameMsg }}</div>
         </div>
         <div class="mb-3">
           <label for="exampleInputPassword1" class="form-label">密码</label>
           <input
             type="password"
-            class="form-control"
+            :class="['form-control', { 'is-invalid': loginInfo.passwordMsg }]"
             id="exampleInputPassword1"
+            v-model="loginInfo.password"
           />
+          <div class="invalid-feedback">{{ loginInfo.passwordMsg }}</div>
         </div>
         <div class="mb-3 form-check">
           <input type="checkbox" class="form-check-input" id="exampleCheck1" />
           <label class="form-check-label" for="exampleCheck1">记住我</label>
         </div>
         <div class="d-flex flex-column gap-2 align-items-center px-1">
-          <button type="submit" class="btn btn-primary w-100 mb-2 text-white">
+          <button
+            type="submit"
+            class="btn btn-primary w-100 mb-2 text-white"
+            @click="submit()"
+          >
             登录
           </button>
           <router-link
@@ -40,9 +81,5 @@
     </div>
   </div>
 </template>
-
-<script lang="ts" setup>
-import axios from "@/utils/axios";
-</script>
 
 <style></style>
