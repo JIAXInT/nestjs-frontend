@@ -1,4 +1,4 @@
-<template>注册</template>
+<template>dashboard</template>
 
 <script setup lang="ts"></script>
 

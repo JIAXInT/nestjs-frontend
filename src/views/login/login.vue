@@ -1,6 +1,10 @@
 <script lang="ts" setup>
 import axios from "@/utils/axios";
 import { computed, reactive } from "vue";
+import { useRouter } from "vue-router";
+
+// 获取路由实例
+const router = useRouter();
 
 const loginInfo = reactive({
   username: "",
@@ -25,9 +29,7 @@ const loginInfo = reactive({
 });
 
 const submit = async () => {
-  axios.post("/auth/login", loginInfo).then((res) => {
-    console.log(res);
-  });
+  router.push("/dashboard");
 };
 </script>
 
